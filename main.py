@@ -31,7 +31,7 @@ class Car:
 
     def __init__(self, carN):
         self.location = (0,0)
-        self.destination = (0,0)
+        self.destination = (9,9)
         self.carN = carN
         self.busy = False
         Ride.rideCount += 1
@@ -49,6 +49,11 @@ class Car:
                 self.location[1] -= 1
         else:
              self.changeState()
+
+
+    def isAtDestination(self):
+        return self.destination == self.location
+
     def updateDestination(self, dest):
         self.destination = dest
 
@@ -58,6 +63,7 @@ class Car:
     def isBusy(self):
         return self.busy
     def changeState(self):
+
             self.busy = not self.busy
 
 def formatData(file):

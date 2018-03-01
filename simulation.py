@@ -33,7 +33,7 @@ class Simulation(object):
             self.freeCars[assignedCar].updateDestination(self.rides[r].getDestination())
             self.freeCars[assignedCar].changeState()
             self.freeCars.remove(self.freeCars.index(assignedCar))
-
+        
 
 
 
