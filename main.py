@@ -1,4 +1,5 @@
 import numpy as np
+import simulation
 
 class Ride:
     rideCount = 0
@@ -70,10 +71,17 @@ class Car:
 
     def isBusy(self):
         return self.busy
-    def changeState(self):
 
-            self.busy = not self.busy
+    def changeState(self):
+        self.busy = not self.busy
+
     def getHistory(self):
+        return self.history
+
+    def getCarNumber(self):
+        return self.carN
+
+    def getCarHistory(self):
         return self.history
 
 def formatData(file):
@@ -105,3 +113,10 @@ def formatData(file):
 
 if (__name__ == '__main__'):
     formatData('a_example.in')
+    sim = simulation.Simulation()
+    sim.runSimulation()
+
+    f = open("text.txt", "w")
+
+    for car in cars:
+        f.write(str(car.getCarNumber()) + " " + str(car.getCarHistory()))
