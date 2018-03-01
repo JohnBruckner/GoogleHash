@@ -36,6 +36,9 @@ class Car:
     def getLocation(self):
         return self.location
 
+    def isBusy(self):
+        return self.busy
+
     def move(self):
         if self.location[0] != self.destination[0]:
             if self.location[0] < self.destination[0]:
