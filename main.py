@@ -31,10 +31,18 @@ class Car:
 
     def __init__(self, carN):
         self.location = (0,0)
+<<<<<<< HEAD
         self.destination = (9,9)
+=======
+        self.history = []
+        self.destination = (0,0)
+>>>>>>> 86902b75a4fa3bbd5597261e54dcb104c17e44eb
         self.carN = carN
         self.busy = False
         Ride.rideCount += 1
+
+    def getLocation(self):
+        return self.location
 
     def move(self):
         if self.location[0] != self.destination[0]:
@@ -65,16 +73,23 @@ class Car:
     def changeState(self):
 
             self.busy = not self.busy
+    def getHistory(self):
+        return self.history
 
 def formatData(file):
     global rides
     global cars
+    global B
+    global T
 
     imRides = []
     imCars = []
 
     rawData = np.genfromtxt(file)
     rideData = np.delete(rawData, 0, axis = 0)
+
+    B = int(rawData.item((0, 4)))
+    T = int(rawData.item((0, 5)))
 
     for index, ride in enumerate(rideData):
         newRide = Ride(index, (ride[0], ride[1]), (ride[2], ride[3]), ride[4], ride[5])

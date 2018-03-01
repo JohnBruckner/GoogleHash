@@ -32,6 +32,7 @@ class Simulation(object):
             assignedCar = self.freqVect.index(min(self.freqVect))
             self.freeCars[assignedCar].updateDestination(self.rides[r].getDestination())
             self.freeCars[assignedCar].changeState()
+            self.freeCars[assignedCar].history.append(self.rides[r].rideN)
             self.freeCars.remove(self.freeCars.index(assignedCar))
         
 
