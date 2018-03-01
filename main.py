@@ -31,6 +31,7 @@ class Car:
 
     def __init__(self, carN):
         self.location = (0,0)
+        self.history = []
         self.destination = (0,0)
         self.carN = carN
         self.busy = False
@@ -62,6 +63,8 @@ class Car:
         return self.busy
     def changeState(self):
             self.busy = not self.busy
+    def getHistory(self):
+        return self.history
 
 def formatData(file):
     global rides
