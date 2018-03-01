@@ -18,10 +18,10 @@ class Ride:
         return "Ride Number: " + str(self.rideN)
 
     def getLocation(self):
-        return (startL)
+        return (self.startL)
 
     def getTime(self):
-        return startT
+        return (self.startT)
 
 class Car:
     carCount = 0
@@ -48,7 +48,7 @@ class Car:
             else:
                 self.location[1] -= 1
         else:
-             changeState
+             self.changeState()
 
     def changeState(self):
         self.busy = not self.busy
