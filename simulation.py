@@ -9,6 +9,7 @@ class Simulation(object):
         self.cars = cars
         self.rides = rides
         self.freeCars = []
+        self.freqVect = []
 
     def runSimulation(self):
         for t in self.time:
@@ -17,6 +18,16 @@ class Simulation(object):
                     freeCars.append(car)
                 else:
                     car.move()
+            for r in len(freeCars):
+                self.freqVect = []
+                for car in freeCars:
+                    findDistance(car, rides[r], t)
+
+
+    def dispatch(self):
+        pass
+
+
 
     def findDistance(self, car, ride, cTime):
         car3d = np.array([car.getLocation[0], car.getLocation[1], cTime])
