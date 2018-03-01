@@ -17,6 +17,12 @@ class Ride:
     def __str__(self):
         return "Ride Number: " + str(self.rideN)
 
+    def getLocation(self):
+        return (startL)
+
+    def getTime(self):
+        return startT
+
 class Car:
     carCount = 0
 
@@ -25,6 +31,9 @@ class Car:
         self.destination = (0,0)
         self.busy = False
         Ride.rideCount += 1
+
+    def getLocation(self):
+        return self.location
 
     def move(self):
         if self.location[0] != self.destination[0]:
