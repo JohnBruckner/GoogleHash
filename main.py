@@ -36,9 +36,6 @@ class Car:
     def getLocation(self):
         return self.location
 
-    def isBusy(self):
-        return self.busy
-
     def move(self):
         if self.location[0] != self.destination[0]:
             if self.location[0] < self.destination[0]:
@@ -59,12 +56,17 @@ class Car:
 def formatData(file):
     global rides
     global cars
+    global B
+    global T
 
     imRides = []
     imCars = []
 
     rawData = np.genfromtxt(file)
     rideData = np.delete(rawData, 0, axis = 0)
+
+    B = int(rawData.item((0, 4)))
+    T = int(rawData.item((0, 5)))
 
     for index, ride in enumerate(rideData):
         newRide = Ride(index, (ride[0], ride[1]), (ride[2], ride[3]), ride[4], ride[5])
