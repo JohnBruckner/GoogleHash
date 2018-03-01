@@ -1,4 +1,4 @@
-import numpy as np
+# import numpy as np
 
 class Ride:
     rideCount = 0
@@ -37,6 +37,8 @@ class Car:
                 self.location[1] += 1
             else:
                 self.location[1] -= 1
+        else:
+             changeState
 
     def changeState(self):
         self.busy = not self.busy
