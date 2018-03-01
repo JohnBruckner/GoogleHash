@@ -20,9 +20,10 @@ class Ride:
 class Car:
     carCount = 0
 
-    def __init__(self):
+    def __init__(self, carN):
         self.location = (0,0)
         self.destination = (0,0)
+        self.carN = carN
         self.busy = False
         Ride.rideCount += 1
 
@@ -59,7 +60,7 @@ def formatData(file):
     rides = np.sort(rides, kind = 'heapsort')
 
     for i in range(int(rawData.item((0, 2)))):
-        imCars.append(Car())
+        imCars.append(Car(i))
 
     cars = np.asarray(imCars)
 
