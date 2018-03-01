@@ -23,6 +23,9 @@ class Ride:
     def getTime(self):
         return (self.startT)
 
+    def getDestination(self):
+        return self.finL
+
 class Car:
     carCount = 0
 
@@ -49,9 +52,16 @@ class Car:
                 self.location[1] -= 1
         else:
              self.changeState()
+    def updateDestination(self, dest):
+        self.destination = dest
 
+    def getLocation(self):
+        return self.location
+
+    def isBusy(self):
+        return self.busy
     def changeState(self):
-        self.busy = not self.busy
+            self.busy = not self.busy
 
 def formatData(file):
     global rides
