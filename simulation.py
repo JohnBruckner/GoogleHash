@@ -13,19 +13,27 @@ class Simulation(object):
 
     def runSimulation(self):
         for t in self.time:
+            self.freeCars = []
             for car in self.cars:
                 if not car.isBusy:
-                    freeCars.append(car)
+                    self.freeCars.append(car)
                 else:
                     car.move()
-            for r in len(freeCars):
-                self.freqVect = []
-                for car in freeCars:
-                    findDistance(car, rides[r], t)
+            self.dispatch(t)
 
 
-    def dispatch(self):
-        pass
+
+    def dispatch(self, t):
+        #assignedCar = []
+        for r in len(self.freeCars):
+            self.freqVect = []
+            for car in self.freeCars:
+                self.freqVect.append(self.findDistance(car, self.rides[r], t))
+            assignedCar = self.freqVect.index(min(self.freqVect))
+            self.freeCars[assignedCar].updateDestination(self.rides[r].getDestination())
+            self.freeCars[assignedCar].changeState()
+            self.freeCars.remove(self.freeCars.index(assignedCar))
+
 
 
 
