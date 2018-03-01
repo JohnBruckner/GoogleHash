@@ -31,12 +31,12 @@ class Car:
 
     def __init__(self, carN):
         self.location = (0,0)
-<<<<<<< HEAD
+#<<<<<<< HEAD
         self.destination = (9,9)
-=======
+#=======
         self.history = []
         self.destination = (0,0)
->>>>>>> 86902b75a4fa3bbd5597261e54dcb104c17e44eb
+#>>>>>>> 86902b75a4fa3bbd5597261e54dcb104c17e44eb
         self.carN = carN
         self.busy = False
         Ride.rideCount += 1

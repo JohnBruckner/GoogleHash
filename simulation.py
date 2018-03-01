@@ -20,6 +20,7 @@ class Simulation(object):
                 else:
                     car.move()
             self.dispatch(t)
+            self.rides = self.rides[len(self.freeCars)]
 
 
 
@@ -34,7 +35,7 @@ class Simulation(object):
             self.freeCars[assignedCar].changeState()
             self.freeCars[assignedCar].history.append(self.rides[r].rideN)
             self.freeCars.remove(self.freeCars.index(assignedCar))
-        
+
 
 
 
