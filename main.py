@@ -6,8 +6,8 @@ class Ride:
 
     def __init__(self, rideN, startL, finL, startT, finT):
         self.rideN = rideN
-        self.startL = startL
-        self.finL = finL
+        self.startL = list(startL)
+        self.finL = list(finL)
         self.startT = startT
         self.finT = finT
         Ride.rideCount += 1
@@ -31,33 +31,44 @@ class Car:
     carCount = 0
 
     def __init__(self, carN):
-        self.location = (0,0)
-#<<<<<<< HEAD
-        self.destination = (9,9)
-#=======
+        self.location = [0,0]
+        self.destination = [9,9]
         self.history = []
-        self.destination = (0,0)
-#>>>>>>> 86902b75a4fa3bbd5597261e54dcb104c17e44eb
         self.carN = carN
         self.busy = False
+        self.pickUp = []
+        self.pickUpTime = 0
+        #self.currentTime = 0
         Ride.rideCount += 1
 
     def getLocation(self):
         return self.location
 
-    def move(self):
-        if self.location[0] != self.destination[0]:
-            if self.location[0] < self.destination[0]:
+    def move(self, currentTime):
+        if len(self.pickUp and self.pickUpTime > self.currentTime) == 0:
+            if self.route(self.destination):
+                self.changeState()
+
+        else:
+            if self.route(self.pickUp):
+                self.pickUp = []
+
+    def route(self, destination):
+        if self.location[0] != destination[0]:
+            if self.location[0] < destination[0]:
                 self.location[0] += 1
+                return True
             else:
                 self.location[0] -= 1
-        elif self.location[1] != self.destination[1]:
-            if self.location[1] < self.destination[1]:
+                return True
+        elif self.location[1] != destination[1]:
+            if self.location[1] < destination[1]:
                 self.location[1] += 1
+                return True
             else:
                 self.location[1] -= 1
-        else:
-             self.changeState()
+                return True
+        return False
 
 
     def isAtDestination(self):
@@ -112,11 +123,11 @@ def formatData(file):
     cars = np.asarray(imCars)
 
 if (__name__ == '__main__'):
-    formatData('b_should_be_easy.in')
+    formatData('a_example.in')
     sim = simulation.Simulation(T, cars, rides)
     sim.runSimulation()
 
     f = open("text.txt", "w")
 
     for car in cars:
-        f.write(str(car.getCarNumber()) + " " + str(car.getCarHistory())+ "\n")
+        f.write(str(car.getCarNumber()) + " " + str(car.history)+ "\n")
