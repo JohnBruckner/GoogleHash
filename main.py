@@ -112,11 +112,11 @@ def formatData(file):
     cars = np.asarray(imCars)
 
 if (__name__ == '__main__'):
-    formatData('a_example.in')
-    sim = simulation.Simulation()
+    formatData('b_should_be_easy.in')
+    sim = simulation.Simulation(T, cars, rides)
     sim.runSimulation()
 
     f = open("text.txt", "w")
 
     for car in cars:
-        f.write(str(car.getCarNumber()) + " " + str(car.getCarHistory()))
+        f.write(str(car.getCarNumber()) + " " + str(car.getCarHistory())+ "\n")

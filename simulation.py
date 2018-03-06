@@ -12,7 +12,7 @@ class Simulation(object):
         self.freqVect = []
 
     def runSimulation(self):
-        for t in self.time:
+        for t in range(self.time):
             self.freeCars = []
             for car in self.cars:
                 if not car.isBusy:
@@ -20,13 +20,13 @@ class Simulation(object):
                 else:
                     car.move()
             self.dispatch(t)
-            self.rides = self.rides[len(self.freeCars)]
+
 
 
 
     def dispatch(self, t):
         #assignedCar = []
-        for r in len(self.freeCars):
+        for r in range(len(self.freeCars)):
             self.freqVect = []
             for car in self.freeCars:
                 self.freqVect.append(self.findDistance(car, self.rides[r], t))
@@ -35,7 +35,7 @@ class Simulation(object):
             self.freeCars[assignedCar].changeState()
             self.freeCars[assignedCar].history.append(self.rides[r].rideN)
             self.freeCars.remove(self.freeCars.index(assignedCar))
-
+            self.rides = self.rides[len(self.freeCars):]
 
 
 
