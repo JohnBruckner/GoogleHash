@@ -15,6 +15,7 @@ class Simulation(object):
         print("No. of rides: " + str(len(self.rides)))
         for t in range(self.time):
             self.freeCars = []
+            print("Time: " + str(t))
             for car in self.cars:
                 print("Car is: " + str(car.busy) + " " + str(car.carN))
                 if not car.busy:
@@ -42,19 +43,25 @@ class Simulation(object):
                 print("Ride: " + str(r))
                 self.freqVect = []
                 for car in self.freeCars:
-                    self.freqVect.append(self.findDistance(car, self.rides[r], t))
-                assignedCar = self.freqVect.index(min(self.freqVect))
-                #print(type(assignedCar))
-                print("Assigned car: " + str(assignedCar))
-                self.freeCars[assignedCar].pickUpTime = self.rides[r].startT
-                self.freeCars[assignedCar].pickUp = self.rides[r].startL
-                self.freeCars[assignedCar].updateDestination(self.rides[r].finL)
-                self.freeCars[assignedCar].changeState()
-                print("Car no: " + str(self.freeCars[assignedCar].carN) + " Took ride: " + str(self.rides[r].rideN))
-                self.freeCars[assignedCar].history.append(self.rides[r].rideN)
-                #print("Free cars: " + str(self.freeCars))
-                #print("Free cars index: " + str(self.freeCars[assignedCar]))
-                del self.freeCars[assignedCar]
+                    try:
+                        self.freqVect.append(self.findDistance(car, self.rides[r], t))
+                    except:
+                        pass
+                try:
+                    assignedCar = self.freqVect.index(min(self.freqVect))
+                    #print(type(assignedCar))
+                    print("Assigned car: " + str(assignedCar))
+                    self.freeCars[assignedCar].pickUpTime = self.rides[r].startT
+                    self.freeCars[assignedCar].pickUp = self.rides[r].startL
+                    self.freeCars[assignedCar].updateDestination(self.rides[r].finL)
+                    self.freeCars[assignedCar].changeState()
+                    print("Car no: " + str(self.freeCars[assignedCar].carN) + " Took ride: " + str(self.rides[r].rideN))
+                    self.freeCars[assignedCar].history.append(self.rides[r].rideN)
+                    #print("Free cars: " + str(self.freeCars))
+                    #print("Free cars index: " + str(self.freeCars[assignedCar]))
+                    del self.freeCars[assignedCar]
+                except:
+                    pass
         self.rides = self.rides[l:]
 
 

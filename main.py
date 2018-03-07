@@ -1,5 +1,6 @@
 import numpy as np
 import simulation
+import re
 
 class Ride:
     rideCount = 0
@@ -45,15 +46,21 @@ class Car:
         return self.location
 
     def move(self, currentTime):
-        if len(self.pickUp and self.pickUpTime > self.currentTime) == 0:
+        if len(self.pickUp) == 0:
+            print('DEEEEEEEEEEZ NUTS')
             if self.route(self.destination):
                 self.changeState()
-
+        elif self.pickUpTime > currentTime:
+            pass
         else:
+            print('YIPPEE KAY YAY MOTHERFUKCER')
+            print(self.pickUp)
             if self.route(self.pickUp):
                 self.pickUp = []
 
     def route(self, destination):
+        print(self.location)
+        print(destination)
         if self.location[0] != destination[0]:
             if self.location[0] < destination[0]:
                 self.location[0] += 1
@@ -123,11 +130,18 @@ def formatData(file):
     cars = np.asarray(imCars)
 
 if (__name__ == '__main__'):
-    formatData('a_example.in')
+    formatData('e_high_bonus.in')
     sim = simulation.Simulation(T, cars, rides)
     sim.runSimulation()
-
-    f = open("text.txt", "w")
+    print("Hello wordl!")
+    f = open("e.txt", "w")
+    #f.write("PENIS")
 
     for car in cars:
-        f.write(str(car.getCarNumber()) + " " + str(car.history)+ "\n")
+        s = str(car.history)
+        s = re.sub(r'[^\w]', ' ', s)
+        s = re.sub(' +',' ', s)
+        s = s.strip(" ")
+        f.write(str(len(car.history)) + " " + s + "\n")
+
+    f.close()
