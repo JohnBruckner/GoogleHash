@@ -134,12 +134,12 @@ def formatData(file):
     cars = np.asarray(imCars)
     #meanPoint = findMean()
 
-def findCentroid():
-    #minDist = float("inf")
-    point = np.array([0, 0])
-    for ride in rides:
-        pass
-    return point
+# def findCentroid():
+#     #minDist = float("inf")
+#     point = np.array([0, 0])
+#     for ride in rides:
+#         pass
+#     return point
 
 
 if (__name__ == '__main__'):
