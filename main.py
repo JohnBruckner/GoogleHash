@@ -18,7 +18,7 @@ class mapOptimizer:
             newShape = np.expand_dims(ride.startL, axis=0)
             print(str(newShape.shape))
             print((str(self.rideStartL.shape)))
-            #np.append(self.rides, newShape)
+            # np.append(self.rides, newShape)
             self.rideStartL = np.vstack((self.rideStartL, ride.startL))
 
     def clustering(self):
@@ -73,7 +73,7 @@ class Car:
     def changeState(self):
         self.busy = not self.busy
 
-    def updateCar(self, pickup=[], destination=[], centroid=[], centre=True):
+    def updateCar(self, pickup=np.array([9, 9]), destination=np.array([9, 9]), centroid=np.array([9, 9]), centre=True):
         if centre:
             self.centroid = centroid
             self.busy = False
@@ -84,8 +84,8 @@ class Car:
 
     def move(self, destination):
         if not np.array_equal(self.location[0], destination[0]):
-            #print(str(self.location.shape))
-            #print(str(self.location[0]))
+            # print(str(self.location.shape))
+            # print(str(self.location[0]))
             if self.location.item(0) < destination.item(0):
                 self.location[0] += 1
                 # return True
@@ -123,10 +123,10 @@ class Car:
         else:
             if self.gotToPickup == False or self.pickUpTime >= currentTime:
                 self.goToPickup()
-                if (self.location == self.pickUp).all():
+                if np.array_equal(self.location, self.pickUp):
                     self.gotToPickup = True
             else:
-                if  (self.location == self.destination).all():
+                if np.array_equal(self.location, self.destination):
                     self.busy = False
                 else:
                     self.goToDestination()
@@ -215,11 +215,9 @@ def formatData(file):
     cars = np.asarray(imCars)
 
 
-
-
 if (__name__ == '__main__'):
-    inFiles = ["a_example.in", "b_should_be_easy.in", "c_no_hurry.in", "d_metropolis.in", "e_high_bonus.in"]
-    outFiles = ["a4.txt", "b4.txt", "c4.txt", "d4.txt", "e4.txt"]
+    inFiles = ["b_should_be_easy.in", "c_no_hurry.in", "d_metropolis.in", "e_high_bonus.in"]
+    outFiles = ["b4.txt", "c4.txt", "d4.txt", "e4.txt"]
     for inFile, outFile in zip(inFiles, outFiles):
 
         formatData(inFile)
