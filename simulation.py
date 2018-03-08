@@ -1,15 +1,17 @@
 import math
 import numpy as np
+import math
 
 class Simulation(object):
     """docstring for Simulation."""
-    def __init__(self, time, cars, rides):
+    def __init__(self, time, cars, rides, centre):
         #super(Simulation, self).__init__()
-        self.time = time
-        self.cars = cars
-        self.rides = rides
+        self.time = time #time given for simulation
+        self.cars = cars #list of cars with their respective locations
+        self.rides = rides #list of rides
         self.freeCars = []
         self.freqVect = []
+        self.centre = centre
 
     def runSimulation(self):
         print("No. of rides: " + str(len(self.rides)))
@@ -27,9 +29,12 @@ class Simulation(object):
                     print("Car: " + str(car.carN) + " is moving")
                     car.move(t)
                     print(str(car.location))
+            if len(self.rides) == 0:
+                print("Simulation ended!")
+                break
             print("Dispatching")
             self.dispatch(t)
-
+        print("Simulation ended!")
 
     def dispatch(self, t):
         #assignedCar = []
@@ -51,6 +56,12 @@ class Simulation(object):
                     assignedCar = self.freqVect.index(min(self.freqVect))
                     #print(type(assignedCar))
                     print("Assigned car: " + str(assignedCar))
+                    # if self.distance2D(car, self.rides[r]) < self.rides[r].finT - t:
+                    #     print("Dropping ride: " + str(self.rides[r]))
+                    #     self.freeCars[assignedCar].updateDestination = self.centre
+                    #     self.freeCars[assignedCar].changeState()
+                    #     del self.rides[r]
+
                     self.freeCars[assignedCar].pickUpTime = self.rides[r].startT
                     self.freeCars[assignedCar].pickUp = self.rides[r].startL
                     self.freeCars[assignedCar].updateDestination(self.rides[r].finL)
@@ -64,7 +75,14 @@ class Simulation(object):
                     pass
         self.rides = self.rides[l:]
 
+    # def dropRide(self, car, ride, cTime, aTime):
+    #     if self.distance2D(car, ride) < aTime - cTime:
+    #         del self.rides[0]
+    #     else:
+    #         pass
 
+    def distance2D(self, car, ride):
+        return math.fabs(car.location[0] - ride.startL[0]) + math.fabs(car.location[1] - ride.startL[1]) + math.fabs(ride.startL[0] - ride.finL[0]) + math.fabs(ride.startL[1] - ride.finL[0])
 
     def findDistance(self, car, ride, cTime):
         #print(str(type(car.location)))

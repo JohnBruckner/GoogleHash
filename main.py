@@ -1,5 +1,6 @@
 import numpy as np
 import simulation
+import math
 import re
 
 class Ride:
@@ -50,7 +51,7 @@ class Car:
             print('DEEEEEEEEEEZ NUTS')
             if self.route(self.destination):
                 self.changeState()
-        elif self.pickUpTime > currentTime:
+        elif self.pickUpTime >= currentTime:
             pass
         else:
             print('YIPPEE KAY YAY MOTHERFUKCER')
@@ -102,11 +103,14 @@ class Car:
     def getCarHistory(self):
         return self.history
 
+
 def formatData(file):
     global rides
     global cars
     global B
     global T
+    global meanPoint
+
 
     imRides = []
     imCars = []
@@ -128,13 +132,22 @@ def formatData(file):
         imCars.append(Car(i))
 
     cars = np.asarray(imCars)
+    #meanPoint = findMean()
+
+def findCentroid():
+    #minDist = float("inf")
+    point = np.array([0, 0])
+    for ride in rides:
+        pass
+    return point
+
 
 if (__name__ == '__main__'):
-    formatData('e_high_bonus.in')
-    sim = simulation.Simulation(T, cars, rides)
+    formatData('c_no_hurry.in')
+    sim = simulation.Simulation(T, cars, rides, meanPoint)
     sim.runSimulation()
-    print("Hello wordl!")
-    f = open("e.txt", "w")
+    print("Hello world!")
+    f = open("c.txt", "w")
     #f.write("PENIS")
 
     for car in cars:
