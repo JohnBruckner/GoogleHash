@@ -83,6 +83,8 @@ class Car:
             self.destination = destination
 
     def move(self, destination):
+        # x, y = destination
+        # x1, y1 = self.location
         if not np.array_equal(self.location[0], destination[0]):
             # print(str(self.location.shape))
             # print(str(self.location[0]))
@@ -94,7 +96,7 @@ class Car:
             else:
                 pass
                 # return True
-        elif np.array_equal(self.location[1], destination[1]):
+        elif not np.array_equal(self.location[1], destination[1]):
             if self.location.item(1) < destination.item(1):
                 self.location[1] += 1
                 # return True
