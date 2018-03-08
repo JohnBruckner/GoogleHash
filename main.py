@@ -70,9 +70,13 @@ class Car:
     def changeState(self):
         self.busy = not self.busy
 
-    def updateCar(self, pickup, destination):
-        self.pickUp = pickup
-        self.destination = destination
+    def updateCar(self, pickup=[], destination=[], centre=True):
+        if centre:
+            self.busy = False
+        else:
+            self.busy = True
+            self.pickUp = pickup
+            self.destination = destination
 
     def move(self, destination):
         if self.location[0] != destination[0]:

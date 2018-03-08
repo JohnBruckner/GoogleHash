@@ -58,18 +58,18 @@ class Simulation(object):
                         self.freqVect.append(self.findDistance(car, self.rides[r], t))
                     except:
                         pass
-                try:
+        self.rides[r].startL, self.rides[r].fin        try:
                     assignedCar = self.freqVect.index(min(self.freqVect))
                     # print(type(assignedCar))
                     #print("Assigned car: " + str(assignedCar))
                     if self.distance2D(car, self.rides[r]) < self.rides[r].finT - t:
                         print("Dropping ride: " + str(self.rides[r]))
-                        self.freeCars[assignedCar].updateCar(self.rides[r].startL, self.rides[r].finL)
+                        self.freeCars[assignedCar].updateCar(centre=True)
                         self.freeCars[assignedCar].route(centroid, t)
                         del self.rides[r]
                     else:
                         self.freeCars[assignedCar].pickUpTime = self.rides[r].startT
-                        self.freeCars[assignedCar].updateCar(self.rides[r].startL, self.rides[r].finL)
+                        self.freeCars[assignedCar].updateCar(pickup = self.rides[r].startL, destination = self.rides[r].finL, centre=False)
                         self.freeCars[assignedCar].route(centroid, t)
                         print("Car no: " + str(self.freeCars[assignedCar].carN) + " Took ride: " + str(
                             self.rides[r].rideN))
