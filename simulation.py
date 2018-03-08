@@ -1,4 +1,5 @@
-import math
+# import math
+import main
 import numpy as np
 import math
 
@@ -6,17 +7,18 @@ import math
 class Simulation(object):
     """docstring for Simulation."""
 
-    def __init__(self, time, cars, rides, centre):
+    def __init__(self, time, cars, rides, map):
         # super(Simulation, self).__init__()
         self.time = time  # time given for simulation
         self.cars = cars  # list of cars with their respective locations
         self.rides = rides  # list of rides
         self.freeCars = []
         self.freqVect = []
-        self.centre = centre
+        self.map = map
 
     def runSimulation(self):
         print("No. of rides: " + str(len(self.rides)))
+        self.map.clustering()
         for t in range(self.time):
             self.freeCars = []
             print("Time: " + str(t))
@@ -47,6 +49,8 @@ class Simulation(object):
             pass
         else:
             for r in range(len(self.freeCars)):
+                i = self.map.closestCluster(self.freeCars[r].location)
+                centroid = self.map.closestClusterCoordinates(i)
                 print("Ride: " + str(r))
                 self.freqVect = []
                 for car in self.freeCars:
@@ -57,31 +61,25 @@ class Simulation(object):
                 try:
                     assignedCar = self.freqVect.index(min(self.freqVect))
                     # print(type(assignedCar))
-                    print("Assigned car: " + str(assignedCar))
-                    # if self.distance2D(car, self.rides[r]) < self.rides[r].finT - t:
-                    #     print("Dropping ride: " + str(self.rides[r]))
-                    #     self.freeCars[assignedCar].updateDestination = self.centre
-                    #     self.freeCars[assignedCar].changeState()
-                    #     del self.rides[r]
-
-                    self.freeCars[assignedCar].pickUpTime = self.rides[r].startT
-                    self.freeCars[assignedCar].pickUp = self.rides[r].startL
-                    self.freeCars[assignedCar].updateDestination(self.rides[r].finL)
-                    self.freeCars[assignedCar].changeState()
-                    print("Car no: " + str(self.freeCars[assignedCar].carN) + " Took ride: " + str(self.rides[r].rideN))
-                    self.freeCars[assignedCar].history.append(self.rides[r].rideN)
-                    # print("Free cars: " + str(self.freeCars))
-                    # print("Free cars index: " + str(self.freeCars[assignedCar]))
-                    del self.freeCars[assignedCar]
+                    #print("Assigned car: " + str(assignedCar))
+                    if self.distance2D(car, self.rides[r]) < self.rides[r].finT - t:
+                        print("Dropping ride: " + str(self.rides[r]))
+                        self.freeCars[assignedCar].updateCar(self.rides[r].startL, self.rides[r].finL)
+                        self.freeCars[assignedCar].route(centroid, t)
+                        del self.rides[r]
+                    else:
+                        self.freeCars[assignedCar].pickUpTime = self.rides[r].startT
+                        self.freeCars[assignedCar].updateCar(self.rides[r].startL, self.rides[r].finL)
+                        self.freeCars[assignedCar].route(centroid, t)
+                        print("Car no: " + str(self.freeCars[assignedCar].carN) + " Took ride: " + str(
+                            self.rides[r].rideN))
+                        self.freeCars[assignedCar].history.append(self.rides[r].rideN)
+                        # print("Free cars: " + str(self.freeCars))
+                        # print("Free cars index: " + str(self.freeCars[assignedCar]))
+                        del self.freeCars[assignedCar]
                 except:
                     pass
         self.rides = self.rides[l:]
-
-    # def dropRide(self, car, ride, cTime, aTime):
-    #     if self.distance2D(car, ride) < aTime - cTime:
-    #         del self.rides[0]
-    #     else:
-    #         pass
 
     def distance2D(self, car, ride):
         return math.fabs(car.location[0] - ride.startL[0]) + math.fabs(car.location[1] - ride.startL[1]) + math.fabs(

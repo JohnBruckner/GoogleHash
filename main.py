@@ -1,7 +1,37 @@
-import numpy as np
-import simulation
-import sklearn
-import re
+import numpy as np  # for array stuff
+# import scipy.spatial  # for voronoi map generator
+import sklearn.cluster  # for clustering and data analysis
+import re  # for output file formatting
+import simulation  # where some of the magic happens
+
+
+class mapOptimizer:
+
+    def __init__(self, rides):
+        self.rides = rides
+        self.rideStartL = np.array([[0, 0]])
+
+    def findStartL(self):
+        for ride in self.rides:
+            newShape = np.expand_dims(ride.startL, axis=0)
+            print(str(newShape.shape))
+            print((str(self.rideStartL.shape)))
+            #np.append(self.rides, newShape)
+            self.rideStartL = np.vstack((self.rideStartL, ride.startL))
+
+    def clustering(self):
+        self.c = sklearn.cluster.KMeans(n_clusters=10, init='k-means++', n_init=20, max_iter=1000, verbose=1, n_jobs=-1,
+                                        algorithm='auto')
+        self.c.fit(self.rideStartL)
+
+    def closestCluster(self, point):
+        point = np.expand_dims(point, axis=0)
+        index = self.c.predict(point)
+        return index
+
+    def closestClusterCoordinates(self, index):
+        coordinates = self.c.cluster_centers_[index]
+        return coordinates
 
 
 class Ride:
@@ -9,8 +39,8 @@ class Ride:
 
     def __init__(self, rideN, startL, finL, startT, finT):
         self.rideN = rideN
-        self.startL = list(startL)
-        self.finL = list(finL)
+        self.startL = np.array(startL)
+        self.finL = np.array(finL)
         self.startT = startT
         self.finT = finT
         Ride.rideCount += 1
@@ -21,88 +51,126 @@ class Ride:
     def __str__(self):
         return "Ride Number: " + str(self.rideN)
 
-    def getLocation(self):
-        return (self.startL)
-
-    def getTime(self):
-        return (self.startT)
-
-    def getDestination(self):
-        return self.finL
-
 
 class Car:
     carCount = 0
 
     def __init__(self, carN):
         self.location = [0, 0]
+        self.pickUp = [9, 9]
         self.destination = [9, 9]
         self.history = []
         self.carN = carN
+        self.gotToPickup = False
         self.busy = False
-        self.pickUp = []
         self.pickUpTime = 0
-        # self.currentTime = 0
+        self.currentTime = 0
         Ride.rideCount += 1
-
-    def getLocation(self):
-        return self.location
-
-    def move(self, currentTime):
-        if len(self.pickUp) == 0:
-            print('DEEEEEEEEEEZ NUTS')
-            if self.route(self.destination):
-                self.changeState()
-        elif self.pickUpTime >= currentTime:
-            pass
-        else:
-            print('YIPPEE KAY YAY MOTHERFUKCER')
-            print(self.pickUp)
-            if self.route(self.pickUp):
-                self.pickUp = []
-
-    def route(self, destination):
-        print(self.location)
-        print(destination)
-        if self.location[0] != destination[0]:
-            if self.location[0] < destination[0]:
-                self.location[0] += 1
-                return True
-            else:
-                self.location[0] -= 1
-                return True
-        elif self.location[1] != destination[1]:
-            if self.location[1] < destination[1]:
-                self.location[1] += 1
-                return True
-            else:
-                self.location[1] -= 1
-                return True
-        return False
-
-    def isAtDestination(self):
-        return self.destination == self.location
-
-    def updateDestination(self, dest):
-        self.destination = dest
-
-    def getLocation(self):
-        return self.location
-
-    def isBusy(self):
-        return self.busy
 
     def changeState(self):
         self.busy = not self.busy
 
-    def getHistory(self):
-        return self.history
+    def updateCar(self, pickup, destination):
+        self.pickUp = pickup
+        self.destination = destination
 
-    def getCarNumber(self):
-        return self.carN
+    def move(self, destination):
+        if self.location[0] != destination[0]:
+            if self.location[0] < destination[0]:
+                self.location[0] += 1
+                # return True
+            else:
+                self.location[0] -= 1
+                # return True
+        elif self.location[1] != destination[1]:
+            if self.location[1] < destination[1]:
+                self.location[1] += 1
+                # return True
+            else:
+                self.location[1] -= 1
+                # return True
+        # return False
 
-    def getCarHistory(self):
-        return self.history
+    def goToCentroid(self, centroid):
+        self.busy = False
+        self.move(centroid)
+
+    def goToPickup(self):
+        self.busy = True
+        self.move(self.pickUp)
+
+    def goToDestination(self):
+        self.busy = True
+        self.move(self.destination)
+
+    def route(self, centroid, currentTime):
+        if self.busy == False:
+            self.goToCentroid(centroid)
+        else:
+            if self.gotToPickup == False or self.pickUpTime >= currentTime:
+                self.goToPickup()
+                if self.location == self.pickUp:
+                    self.gotToPickup = True
+            else:
+                if  self.location == self.destination:
+                    self.busy = False
+                else:
+                    self.goToDestination()
+
+
+# def move(self, currentTime):
+#     if len(self.pickUp) == 0:
+#         # print('DEEEEEEEEEEZ NUTS')
+#         if self.route(self.destination):
+#             pass
+#             # self.changeState()
+#     elif self.pickUpTime >= currentTime:
+#         pass
+#     else:
+#         # print('YIPPEE KAY YAY MOTHERFUKCER')
+#         print(self.pickUp)
+#         if self.route(self.pickUp):
+#             self.pickUp = []
+#
+# def route(self, destination):
+#     print(self.location)
+#     print(destination)
+#     if self.location[0] != destination[0]:
+#         if self.location[0] < destination[0]:
+#             self.location[0] += 1
+#             return True
+#         else:
+#             self.location[0] -= 1
+#             return True
+#     elif self.location[1] != destination[1]:
+#         if self.location[1] < destination[1]:
+#             self.location[1] += 1
+#             return True
+#         else:
+#             self.location[1] -= 1
+#             return True
+#     return False
+#
+# def isAtDestination(self):
+#     return self.destination == self.location
+#
+# def updateDestination(self, dest):
+#     self.destination = dest
+#
+# def getLocation(self):
+#     return self.location
+#
+# def isBusy(self):
+#     return self.busy
+#
+# def getHistory(self):
+#     return self.history
+#
+# def getCarNumber(self):
+#     return self.carN
+#
+# def getCarHistory(self):
+#     return self.history
 
 
 def formatData(file):
@@ -110,7 +178,6 @@ def formatData(file):
     global cars
     global B
     global T
-    global meanPoint
 
     imRides = []
     imCars = []
@@ -132,23 +199,18 @@ def formatData(file):
         imCars.append(Car(i))
 
     cars = np.asarray(imCars)
-    # meanPoint = findMean()
 
 
-# def findCentroid():
-#     #minDist = float("inf")
-#     point = np.array([0, 0])
-#     for ride in rides:
-#         pass
-#     return point
 
 
 if (__name__ == '__main__'):
-    formatData('c_no_hurry.in')
-    sim = simulation.Simulation(T, cars, rides, meanPoint)
+    formatData('b_should_be_easy.in')
+    map = mapOptimizer(rides)
+    map.findStartL()
+    sim = simulation.Simulation(T, cars, rides, map)
     sim.runSimulation()
     print("Hello world!")
-    f = open("c.txt", "w")
+    f = open("b2.txt", "w")
     # f.write("PENIS")
 
     for car in cars:
