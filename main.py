@@ -22,7 +22,7 @@ class mapOptimizer:
             self.rideStartL = np.vstack((self.rideStartL, ride.startL))
 
     def clustering(self):
-        self.c = sklearn.cluster.KMeans(n_clusters=1, init='k-means++', n_init=20, max_iter=1000, verbose=1, n_jobs=-1,
+        self.c = sklearn.cluster.KMeans(n_clusters=10, init='k-means++', n_init=20, max_iter=1000, verbose=1, n_jobs=-1,
                                         algorithm='auto')
         self.c.fit(self.rideStartL)
 
@@ -89,15 +89,19 @@ class Car:
             if self.location.item(0) < destination.item(0):
                 self.location[0] += 1
                 # return True
-            else:
+            elif self.location.item(0) > 0:
                 self.location[0] -= 1
+            else:
+                pass
                 # return True
         elif np.array_equal(self.location[1], destination[1]):
             if self.location.item(1) < destination.item(1):
                 self.location[1] += 1
                 # return True
-            else:
+            elif self.location.item(1) > 0:
                 self.location[1] -= 1
+            else:
+                pass
                 # return True
         # return False
 
@@ -214,41 +218,45 @@ def formatData(file):
 
 
 if (__name__ == '__main__'):
-    formatData('a_example.in')
-    map = mapOptimizer(rides)
-    map.findStartL()
-    sim = simulation.Simulation(T, cars, rides, map)
-    sim.runSimulation()
-    print("Hello world!")
-    print(str(len(rides)))
-    print(str(sim.ridesDropped))
-    # n_clusters = len(map.clusterCentres)
-    # k_means_cluster_centers = np.sort(map.clusterCentres, axis=0)
-    # k_means_labels = pairwise_distances_argmin(X, k_means_cluster_centers)
-    # fig = plt.figure(figsize=(8, 3))
-    # fig.subplots_adjust(left=0.02, right=0.98, bottom=0.05, top=0.9)
-    # colors = ['#4EACC5', '#FF9C34', '#4E9A06']
-    # ax = fig.add_subplot(1, 3, 1)
-    # for k, col in zip(range(n_clusters), colors):
-    #     my_members = k_means_labels == k
-    #     cluster_center = k_means_cluster_centers[k]
-    #     # ax.plot(rides.startL[my_members, 0], rides[my_members, 1], 'w',
-    #     #         markerfacecolor=col, marker='.')
-    #     ax.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col,
-    #             markeredgecolor='k', markersize=6)
-    # ax.set_title('KMeans')
-    # ax.set_xticks(())
-    # ax.set_yticks(())
-    # colors = ['#4EACC5', '#FF9C34', '#4E9A06']
-    # plt.show()
-    f = open("a2.txt", "w")
-    # f.write("PENIS")
+    inFiles = ["a_example.in", "b_should_be_easy.in", "c_no_hurry.in", "d_metropolis.in", "e_high_bonus.in"]
+    outFiles = ["a4.txt", "b4.txt", "c4.txt", "d4.txt", "e4.txt"]
+    for inFile, outFile in zip(inFiles, outFiles):
 
-    for car in cars:
-        s = str(car.history)
-        s = re.sub(r'[^\w]', ' ', s)
-        s = re.sub(' +', ' ', s)
-        s = s.strip(" ")
-        f.write(str(len(car.history)) + " " + s + "\n")
+        formatData(inFile)
+        map = mapOptimizer(rides)
+        map.findStartL()
+        sim = simulation.Simulation(T, cars, rides, map)
+        sim.runSimulation()
+        print("Hello world!")
+        print(str(len(rides)))
+        print(str(sim.ridesDropped))
+        # n_clusters = len(map.clusterCentres)
+        # k_means_cluster_centers = np.sort(map.clusterCentres, axis=0)
+        # k_means_labels = pairwise_distances_argmin(X, k_means_cluster_centers)
+        # fig = plt.figure(figsize=(8, 3))
+        # fig.subplots_adjust(left=0.02, right=0.98, bottom=0.05, top=0.9)
+        # colors = ['#4EACC5', '#FF9C34', '#4E9A06']
+        # ax = fig.add_subplot(1, 3, 1)
+        # for k, col in zip(range(n_clusters), colors):
+        #     my_members = k_means_labels == k
+        #     cluster_center = k_means_cluster_centers[k]
+        #     # ax.plot(rides.startL[my_members, 0], rides[my_members, 1], 'w',
+        #     #         markerfacecolor=col, marker='.')
+        #     ax.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col,
+        #             markeredgecolor='k', markersize=6)
+        # ax.set_title('KMeans')
+        # ax.set_xticks(())
+        # ax.set_yticks(())
+        # colors = ['#4EACC5', '#FF9C34', '#4E9A06']
+        # plt.show()
+        f = open(outFile, "w")
+        # f.write("PENIS")
 
-    f.close()
+        for car in cars:
+            s = str(car.history)
+            s = re.sub(r'[^\w]', ' ', s)
+            s = re.sub(' +', ' ', s)
+            s = s.strip(" ")
+            f.write(str(len(car.history)) + " " + s + "\n")
+
+        f.close()

@@ -64,7 +64,7 @@ class Simulation(object):
                     assignedCar = self.freqVect.index(min(self.freqVect))
                     # print(type(assignedCar))
                     # print("Assigned car: " + str(assignedCar))
-                    if self.distance2D(car, self.rides[r]) < self.rides[r].finT - t:
+                    if self.distance2D(car, self.rides[r]) > self.rides[r].finT - t:
                         i = self.map.closestCluster(self.freeCars[r].location)
                         c = self.map.closestClusterCoordinates(i)
                         print("Dropping ride: " + str(self.rides[r]))
