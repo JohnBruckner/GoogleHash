@@ -56,22 +56,24 @@ class Car:
     carCount = 0
 
     def __init__(self, carN):
-        self.location = [0, 0]
-        self.pickUp = [9, 9]
-        self.destination = [9, 9]
-        self.history = []
         self.carN = carN
         self.gotToPickup = False
         self.busy = False
         self.pickUpTime = 0
         self.currentTime = 0
+        self.location = [0, 0]
+        self.pickUp = [9, 9]
+        self.destination = [9, 9]
+        self.history = []
+        self.centroid = [0, 0]
         Ride.rideCount += 1
 
     def changeState(self):
         self.busy = not self.busy
 
-    def updateCar(self, pickup=[], destination=[], centre=True):
+    def updateCar(self, pickup=[], destination=[], centroid=[], centre=True):
         if centre:
+            self.centroid = centroid
             self.busy = False
         else:
             self.busy = True
@@ -79,14 +81,14 @@ class Car:
             self.destination = destination
 
     def move(self, destination):
-        if self.location[0] != destination[0]:
+        if (self.location[0] == destination[0]).all():
             if self.location[0] < destination[0]:
                 self.location[0] += 1
                 # return True
             else:
                 self.location[0] -= 1
                 # return True
-        elif self.location[1] != destination[1]:
+        elif self.location[1] == destination[1]:
             if self.location[1] < destination[1]:
                 self.location[1] += 1
                 # return True
@@ -95,9 +97,9 @@ class Car:
                 # return True
         # return False
 
-    def goToCentroid(self, centroid):
+    def goToCentroid(self):
         self.busy = False
-        self.move(centroid)
+        self.move(self.centroid)
 
     def goToPickup(self):
         self.busy = True
@@ -107,16 +109,16 @@ class Car:
         self.busy = True
         self.move(self.destination)
 
-    def route(self, centroid, currentTime):
+    def route(self, currentTime):
         if self.busy == False:
-            self.goToCentroid(centroid)
+            self.goToCentroid()
         else:
             if self.gotToPickup == False or self.pickUpTime >= currentTime:
                 self.goToPickup()
-                if self.location == self.pickUp:
+                if (self.location == self.pickUp).all():
                     self.gotToPickup = True
             else:
-                if  self.location == self.destination:
+                if  (self.location == self.destination).all():
                     self.busy = False
                 else:
                     self.goToDestination()

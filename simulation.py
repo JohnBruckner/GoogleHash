@@ -27,11 +27,12 @@ class Simulation(object):
                 if not car.busy:
                     print("Car: " + str(car.carN) + " is free and getting new assignment")
                     self.freeCars.append(car)
+                    car.route(t)
                     print(str(len(self.freeCars)))
                 else:
                     print(str(car.busy))
                     print("Car: " + str(car.carN) + " is moving")
-                    car.move(t)
+                    car.route(t)
                     print(str(car.location))
             if len(self.rides) == 0:
                 print("Simulation ended!")
@@ -49,8 +50,6 @@ class Simulation(object):
             pass
         else:
             for r in range(len(self.freeCars)):
-                i = self.map.closestCluster(self.freeCars[r].location)
-                centroid = self.map.closestClusterCoordinates(i)
                 print("Ride: " + str(r))
                 self.freqVect = []
                 for car in self.freeCars:
@@ -58,19 +57,20 @@ class Simulation(object):
                         self.freqVect.append(self.findDistance(car, self.rides[r], t))
                     except:
                         pass
-        self.rides[r].startL, self.rides[r].fin        try:
+        #self.rides[r].startL, self.rides[r].finL
+                try:
                     assignedCar = self.freqVect.index(min(self.freqVect))
                     # print(type(assignedCar))
                     #print("Assigned car: " + str(assignedCar))
                     if self.distance2D(car, self.rides[r]) < self.rides[r].finT - t:
+                        i = self.map.closestCluster(self.freeCars[r].location)
+                        c = self.map.closestClusterCoordinates(i)
                         print("Dropping ride: " + str(self.rides[r]))
-                        self.freeCars[assignedCar].updateCar(centre=True)
-                        self.freeCars[assignedCar].route(centroid, t)
-                        del self.rides[r]
+                        self.freeCars[assignedCar].updateCar(centre=True, centroid=c)
+                        #del self.rides[r]
                     else:
                         self.freeCars[assignedCar].pickUpTime = self.rides[r].startT
                         self.freeCars[assignedCar].updateCar(pickup = self.rides[r].startL, destination = self.rides[r].finL, centre=False)
-                        self.freeCars[assignedCar].route(centroid, t)
                         print("Car no: " + str(self.freeCars[assignedCar].carN) + " Took ride: " + str(
                             self.rides[r].rideN))
                         self.freeCars[assignedCar].history.append(self.rides[r].rideN)
