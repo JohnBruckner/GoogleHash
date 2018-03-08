@@ -2,13 +2,15 @@ import math
 import numpy as np
 import math
 
+
 class Simulation(object):
     """docstring for Simulation."""
+
     def __init__(self, time, cars, rides, centre):
-        #super(Simulation, self).__init__()
-        self.time = time #time given for simulation
-        self.cars = cars #list of cars with their respective locations
-        self.rides = rides #list of rides
+        # super(Simulation, self).__init__()
+        self.time = time  # time given for simulation
+        self.cars = cars  # list of cars with their respective locations
+        self.rides = rides  # list of rides
         self.freeCars = []
         self.freqVect = []
         self.centre = centre
@@ -37,7 +39,7 @@ class Simulation(object):
         print("Simulation ended!")
 
     def dispatch(self, t):
-        #assignedCar = []
+        # assignedCar = []
         l = len(self.freeCars)
         print("\n")
         if len(self.rides) == 0:
@@ -54,7 +56,7 @@ class Simulation(object):
                         pass
                 try:
                     assignedCar = self.freqVect.index(min(self.freqVect))
-                    #print(type(assignedCar))
+                    # print(type(assignedCar))
                     print("Assigned car: " + str(assignedCar))
                     # if self.distance2D(car, self.rides[r]) < self.rides[r].finT - t:
                     #     print("Dropping ride: " + str(self.rides[r]))
@@ -68,8 +70,8 @@ class Simulation(object):
                     self.freeCars[assignedCar].changeState()
                     print("Car no: " + str(self.freeCars[assignedCar].carN) + " Took ride: " + str(self.rides[r].rideN))
                     self.freeCars[assignedCar].history.append(self.rides[r].rideN)
-                    #print("Free cars: " + str(self.freeCars))
-                    #print("Free cars index: " + str(self.freeCars[assignedCar]))
+                    # print("Free cars: " + str(self.freeCars))
+                    # print("Free cars index: " + str(self.freeCars[assignedCar]))
                     del self.freeCars[assignedCar]
                 except:
                     pass
@@ -82,13 +84,14 @@ class Simulation(object):
     #         pass
 
     def distance2D(self, car, ride):
-        return math.fabs(car.location[0] - ride.startL[0]) + math.fabs(car.location[1] - ride.startL[1]) + math.fabs(ride.startL[0] - ride.finL[0]) + math.fabs(ride.startL[1] - ride.finL[0])
+        return math.fabs(car.location[0] - ride.startL[0]) + math.fabs(car.location[1] - ride.startL[1]) + math.fabs(
+            ride.startL[0] - ride.finL[0]) + math.fabs(ride.startL[1] - ride.finL[0])
 
     def findDistance(self, car, ride, cTime):
-        #print(str(type(car.location)))
-        #print(str(type(ride.startL)))
+        # print(str(type(car.location)))
+        # print(str(type(ride.startL)))
         car3d = np.array([car.location[0], car.location[1], cTime])
         destination3d = np.array([ride.startL[0], ride.startL[1], ride.finT])
-        #print(str(car3d))
-        #print(str(destination3d))
-        return np.linalg.norm(car3d-destination3d)
+        # print(str(car3d))
+        # print(str(destination3d))
+        return np.linalg.norm(car3d - destination3d)

@@ -1,7 +1,8 @@
 import numpy as np
 import simulation
-import math
+import sklearn
 import re
+
 
 class Ride:
     rideCount = 0
@@ -29,18 +30,19 @@ class Ride:
     def getDestination(self):
         return self.finL
 
+
 class Car:
     carCount = 0
 
     def __init__(self, carN):
-        self.location = [0,0]
-        self.destination = [9,9]
+        self.location = [0, 0]
+        self.destination = [9, 9]
         self.history = []
         self.carN = carN
         self.busy = False
         self.pickUp = []
         self.pickUpTime = 0
-        #self.currentTime = 0
+        # self.currentTime = 0
         Ride.rideCount += 1
 
     def getLocation(self):
@@ -78,7 +80,6 @@ class Car:
                 return True
         return False
 
-
     def isAtDestination(self):
         return self.destination == self.location
 
@@ -111,12 +112,11 @@ def formatData(file):
     global T
     global meanPoint
 
-
     imRides = []
     imCars = []
 
     rawData = np.genfromtxt(file)
-    rideData = np.delete(rawData, 0, axis = 0)
+    rideData = np.delete(rawData, 0, axis=0)
 
     B = int(rawData.item((0, 4)))
     T = int(rawData.item((0, 5)))
@@ -126,13 +126,14 @@ def formatData(file):
         imRides.append(newRide)
 
     rides = np.asarray(imRides)
-    rides = np.sort(rides, kind = 'heapsort')
+    rides = np.sort(rides, kind='heapsort')
 
     for i in range(int(rawData.item((0, 2)))):
         imCars.append(Car(i))
 
     cars = np.asarray(imCars)
-    #meanPoint = findMean()
+    # meanPoint = findMean()
+
 
 # def findCentroid():
 #     #minDist = float("inf")
@@ -148,12 +149,12 @@ if (__name__ == '__main__'):
     sim.runSimulation()
     print("Hello world!")
     f = open("c.txt", "w")
-    #f.write("PENIS")
+    # f.write("PENIS")
 
     for car in cars:
         s = str(car.history)
         s = re.sub(r'[^\w]', ' ', s)
-        s = re.sub(' +',' ', s)
+        s = re.sub(' +', ' ', s)
         s = s.strip(" ")
         f.write(str(len(car.history)) + " " + s + "\n")
 
