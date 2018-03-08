@@ -2,6 +2,7 @@ import numpy as np  # for array stuff
 # import scipy.spatial  # for voronoi map generator
 import sklearn.cluster  # for clustering and data analysis
 import re  # for output file formatting
+# import matplotlib.pyplot as plt
 import simulation  # where some of the magic happens
 
 
@@ -10,6 +11,7 @@ class mapOptimizer:
     def __init__(self, rides):
         self.rides = rides
         self.rideStartL = np.array([[0, 0]])
+        # self.clusterCentres = self.c.cluster_centers_
 
     def findStartL(self):
         for ride in self.rides:
@@ -20,7 +22,7 @@ class mapOptimizer:
             self.rideStartL = np.vstack((self.rideStartL, ride.startL))
 
     def clustering(self):
-        self.c = sklearn.cluster.KMeans(n_clusters=10, init='k-means++', n_init=20, max_iter=1000, verbose=1, n_jobs=-1,
+        self.c = sklearn.cluster.KMeans(n_clusters=1, init='k-means++', n_init=20, max_iter=1000, verbose=1, n_jobs=-1,
                                         algorithm='auto')
         self.c.fit(self.rideStartL)
 
@@ -61,11 +63,11 @@ class Car:
         self.busy = False
         self.pickUpTime = 0
         self.currentTime = 0
-        self.location = [0, 0]
-        self.pickUp = [9, 9]
-        self.destination = [9, 9]
+        self.location = np.array([0, 0])
+        self.pickUp = np.array([9, 9])
+        self.destination = np.array([9, 9])
+        self.centroid = np.array([0, 0])
         self.history = []
-        self.centroid = [0, 0]
         Ride.rideCount += 1
 
     def changeState(self):
@@ -81,15 +83,17 @@ class Car:
             self.destination = destination
 
     def move(self, destination):
-        if (self.location[0] == destination[0]).all():
-            if self.location[0] < destination[0]:
+        if not np.array_equal(self.location[0], destination[0]):
+            #print(str(self.location.shape))
+            #print(str(self.location[0]))
+            if self.location.item(0) < destination.item(0):
                 self.location[0] += 1
                 # return True
             else:
                 self.location[0] -= 1
                 # return True
-        elif self.location[1] == destination[1]:
-            if self.location[1] < destination[1]:
+        elif np.array_equal(self.location[1], destination[1]):
+            if self.location.item(1) < destination.item(1):
                 self.location[1] += 1
                 # return True
             else:
@@ -210,13 +214,34 @@ def formatData(file):
 
 
 if (__name__ == '__main__'):
-    formatData('b_should_be_easy.in')
+    formatData('a_example.in')
     map = mapOptimizer(rides)
     map.findStartL()
     sim = simulation.Simulation(T, cars, rides, map)
     sim.runSimulation()
     print("Hello world!")
-    f = open("b2.txt", "w")
+    print(str(len(rides)))
+    print(str(sim.ridesDropped))
+    # n_clusters = len(map.clusterCentres)
+    # k_means_cluster_centers = np.sort(map.clusterCentres, axis=0)
+    # k_means_labels = pairwise_distances_argmin(X, k_means_cluster_centers)
+    # fig = plt.figure(figsize=(8, 3))
+    # fig.subplots_adjust(left=0.02, right=0.98, bottom=0.05, top=0.9)
+    # colors = ['#4EACC5', '#FF9C34', '#4E9A06']
+    # ax = fig.add_subplot(1, 3, 1)
+    # for k, col in zip(range(n_clusters), colors):
+    #     my_members = k_means_labels == k
+    #     cluster_center = k_means_cluster_centers[k]
+    #     # ax.plot(rides.startL[my_members, 0], rides[my_members, 1], 'w',
+    #     #         markerfacecolor=col, marker='.')
+    #     ax.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col,
+    #             markeredgecolor='k', markersize=6)
+    # ax.set_title('KMeans')
+    # ax.set_xticks(())
+    # ax.set_yticks(())
+    # colors = ['#4EACC5', '#FF9C34', '#4E9A06']
+    # plt.show()
+    f = open("a2.txt", "w")
     # f.write("PENIS")
 
     for car in cars:

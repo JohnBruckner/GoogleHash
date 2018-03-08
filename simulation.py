@@ -1,5 +1,6 @@
 # import math
-import main
+# import main
+# import matplotlib as plt
 import numpy as np
 import math
 
@@ -15,6 +16,7 @@ class Simulation(object):
         self.freeCars = []
         self.freqVect = []
         self.map = map
+        self.ridesDropped = 0
 
     def runSimulation(self):
         print("No. of rides: " + str(len(self.rides)))
@@ -57,20 +59,22 @@ class Simulation(object):
                         self.freqVect.append(self.findDistance(car, self.rides[r], t))
                     except:
                         pass
-        #self.rides[r].startL, self.rides[r].finL
+                # self.rides[r].startL, self.rides[r].finL
                 try:
                     assignedCar = self.freqVect.index(min(self.freqVect))
                     # print(type(assignedCar))
-                    #print("Assigned car: " + str(assignedCar))
+                    # print("Assigned car: " + str(assignedCar))
                     if self.distance2D(car, self.rides[r]) < self.rides[r].finT - t:
                         i = self.map.closestCluster(self.freeCars[r].location)
                         c = self.map.closestClusterCoordinates(i)
                         print("Dropping ride: " + str(self.rides[r]))
+                        self.ridesDropped += 1
                         self.freeCars[assignedCar].updateCar(centre=True, centroid=c)
-                        #del self.rides[r]
+                        # del self.rides[r]
                     else:
                         self.freeCars[assignedCar].pickUpTime = self.rides[r].startT
-                        self.freeCars[assignedCar].updateCar(pickup = self.rides[r].startL, destination = self.rides[r].finL, centre=False)
+                        self.freeCars[assignedCar].updateCar(pickup=self.rides[r].startL,
+                                                             destination=self.rides[r].finL, centre=False)
                         print("Car no: " + str(self.freeCars[assignedCar].carN) + " Took ride: " + str(
                             self.rides[r].rideN))
                         self.freeCars[assignedCar].history.append(self.rides[r].rideN)
