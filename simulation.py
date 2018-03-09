@@ -4,6 +4,18 @@
 import numpy as np
 import math
 
+# @TODO: Document code
+# @TODO: Take impossible rides whose final location is close (within tolerance) to a cluster
+# @TODO: Don't take rides whose final location is too far (greater than tolerance) from clusters
+# @TODO: Need to run multiple tests to determine what said tolerance is. Can be fixed or can be set based on the number of
+# @TODO: iterations in the simulation, number of iterations left and the dimensions of the map
+# @TODO: Figure smart formula for said tolerance
+# @TODO: For the first n (What is n?) number of iterations distribute cars to fixed 'random' centroids to achieve better spread over the map
+# @TODO: Add visualisation for clusters, final destinations and time. This could help figure more optimal solutions
+
+# @Observation: Increasing the number of clusters reduces the performance of the algorithm. As observed so far,
+# the ideal number of clusters is between10 and 20.
+
 
 class Simulation(object):
     """docstring for Simulation."""
